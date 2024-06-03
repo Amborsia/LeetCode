@@ -2,34 +2,36 @@
  * @param {character[][]} grid
  * @return {number}
  */
-var numIslands = function (grid) {
+var numIslands = function(grid) {
+    const directions = [
+        [-1, 0], [1, 0], [0, -1], [0, 1]
+    ];
 
-    let visited = Array.from({ length: grid.length }, () => Array(grid[0].length).fill(0));
-    console.log(visited)
-    function dfs(grid, i, j) {
-        if (i < 0 || j < 0 || i >= grid.length || j >= grid[0].length || grid[i][j] == '0' || visited[i][j] == 1) {
+    function dfs(i, j) {
+        if (i < 0 || j < 0 || i >= grid.length || j >= grid[0].length || grid[i][j] === '0') {
             return;
         }
-        visited[i][j] = 1;
-        dfs(grid, i - 1, j);
-        dfs(grid, i + 1, j);
-        dfs(grid, i, j - 1);
-        dfs(grid, i, j + 1);
+        
+        // 방문한 곳을 '0'으로 바꿔서 재방문하지 않도록 함
+        grid[i][j] = '0';
+        
+        for (const [di, dj] of directions) {
+            dfs(i + di, j + dj);
+        }
     }
+
     let count = 0;
     for (let i = 0; i < grid.length; i++) {
         for (let j = 0; j < grid[0].length; j++) {
-            if (grid[i][j] == '1' && visited[i][j] == 0) {
-                dfs(grid, i, j);
+            if (grid[i][j] === '1') {
                 count++;
+                dfs(i, j);
             }
         }
     }
+    
     return count;
-
-    console.log(visited)
 };
 
+// 예제 사용
 console.log(numIslands([["1", "0", "1", "1", "0", "1", "1"]]));
-
-
